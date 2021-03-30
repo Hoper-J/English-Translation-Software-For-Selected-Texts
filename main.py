@@ -7,28 +7,25 @@
 
 import sys
 
-from PyQt5 import QtCore,QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from menubar import MenuBar
-from pdfviewer import PdfViewer
-from menubar import MenuBar
-# from translationandnotes import TranslationAndNotes
-from settings import *
+
+from layout_source.menubar import MenuBar
+from layout_source.settings import Settings
+from layout_source.pdfviewer import PdfViewer
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("论文划线翻译")
-        self.setWindowIcon(QIcon("/Users/home/PycharmProjects/pythonProject1/my_translation/image/logo.ico"))
+        self.setWindowIcon(QIcon("./image/logo.ico"))
         # todo: 创建线程获取翻译
         # self.thread_my = WatchClip()
         # self.thread_my.start()
 
         '''    *****************************  translation/notes area  ******************************     '''
-        # todo:修改一下QTabWidget的表现形式 by QSS
 
         tab = QTabWidget()
         tab.setMinimumWidth(2)
@@ -39,8 +36,6 @@ class MainWindow(QMainWindow):
         tab.addTab(tab2, "笔记")
         tab1.setObjectName('tab1')
         tab2.setObjectName('tab2')
-
-
 
         notes_content = QPlainTextEdit()
         notes_content.setStyleSheet("font: 12pt")
@@ -85,14 +80,6 @@ class MainWindow(QMainWindow):
         splitter1.addWidget(self.pdfViewer)
         splitter1.addWidget(gbox)
         hBoxLayout.addWidget(splitter1)
-        splitter1.setStyleSheet("""
-        splitter1::handle
-        {
-            "background-color: rgb(100, 100, 100);
-        }
-        """
-        )
-
         widget = QWidget()
         widget.setLayout(hBoxLayout)
 
