@@ -6,6 +6,8 @@
 
 
 import sys
+import threading
+import time
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
@@ -15,18 +17,35 @@ from layout_source.menubar import MenuBar
 from layout_source.settings import Settings
 from layout_source.pdfviewer import PdfViewer
 
+from func_source.track_mouse import TrackMouse
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("论文划线翻译")
-        self.setWindowIcon(QIcon("./image/logo.ico"))
+        self.initui()
+        self.update_text()
         # todo: 创建线程获取翻译
         # self.thread_my = WatchClip()
         # self.thread_my.start()
 
-        '''    *****************************  translation/notes area  ******************************     '''
-
+    def update_text(self):
+        tracker = TrackMouse(self.pdfViewer,self.translate_text)
+        # mouce_track = threading.Thread(target=tracker.get_selection,
+        #                  args=(self.pdfViewer,))
+        # mouce_track.start()
+        #
+        # auto_translate = threading.Thread(target=tracker.translate,
+        #                                   args=(self.translate_text,))
+        # auto_translate.start()
+        # 信号 selectionChanged 太"灵敏"了，不建议使用，其在鼠标未松开时依然一直触发
+        # self.pdfViewer.selectionChanged.connect(self.printt)
+    #     if self.pdfViewer.hasSelection():
+    #         self.printt()
+    # def printt(self):
+    #     print(self.pdfViewer.selectedText())
+    def initui(self):
+        self.setWindowTitle("论文划线翻译")
+        self.setWindowIcon(QIcon("./image/logo.ico"))
         tab = QTabWidget()
         tab.setMinimumWidth(2)
 
@@ -37,23 +56,25 @@ class MainWindow(QMainWindow):
         tab1.setObjectName('tab1')
         tab2.setObjectName('tab2')
 
-        notes_content = QPlainTextEdit()
-        notes_content.setStyleSheet("font: 12pt")
-        notes_content.setObjectName('notes_content')
+        self.notes_content = QPlainTextEdit()
+        self.notes_content.setStyleSheet("font: 12pt")
+        self.notes_content.setObjectName('notes_content')
 
-        translateText = QPlainTextEdit()
-        translateText.setStyleSheet("font: 12pt")
-        translateText.setObjectName('translateText')
+        self.translate_text = QPlainTextEdit()
+        self.translate_text.setStyleSheet("font: 12pt")
+        self.translate_text.setObjectName('translate_text')
 
-        translateLayout = QVBoxLayout()
-        translateLayout.addWidget(translateText)
-        translateLayout.setContentsMargins(0, 0, 0, 0)  # 设置距离左上右下的距离
-        tab1.setLayout(translateLayout)
 
-        noterbookLayout = QVBoxLayout()
-        noterbookLayout.addWidget(notes_content)
-        noterbookLayout.setContentsMargins(0, 0, 0, 0)  # 设置距离左上右下的距离
-        tab2.setLayout(noterbookLayout)
+        translate_layout = QVBoxLayout()
+        translate_layout.addWidget(self.translate_text)
+        translate_layout.setContentsMargins(0, 0, 0, 0)  # 设置文本框边缘贴近整个窗口
+        tab1.setLayout(translate_layout)
+
+
+        noterbook_layout = QVBoxLayout()
+        noterbook_layout.addWidget(self.notes_content)
+        noterbook_layout.setContentsMargins(0, 0, 0, 0)
+        tab2.setLayout(noterbook_layout)
 
         # 设置样式
         self.styleSheet = Settings().styleSheet
@@ -99,20 +120,5 @@ if __name__ == '__main__':
     menu_bar = MenuBar()
     menu_bar.set_menubar(main_window)
 
-    # main_window.setWindowOpacity(0.6)
-
-    # qss = '''
-    #             QPlainTextEdit#translateText("\n"
-    #                                        "background-color:black;\n"
-    #                                        " \n"
-    #                                        "")
-    #         '''
-    # main_window.setStyleSheet(qss)
-
-    # con.translationChanged.connect(main_window.updateTranslation)
-    # con.pdfViewMouseRelease.connect(main_window.updateByMouseRelease)
-    # main_window.notes_content.textChanged.connect(main_window.updateByTextEdit)
-    # main_window.text_size_combobox.currentIndexChanged.connect(main_window.updateOriTextSizeByIndexChanged)
-    # main_window.text_size_combobox.currentIndexChanged.connect(main_window.updateResTextSizeByIndexChanged)
     main_window.show()
     sys.exit(app.exec_())
