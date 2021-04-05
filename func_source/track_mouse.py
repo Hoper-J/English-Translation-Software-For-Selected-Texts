@@ -18,18 +18,18 @@ logging.disable(logging.CRITICAL)
 
 
 class TrackMouse:
-    def __init__(self,pdfViewer, translate_text):
+    def __init__(self, raw_queue: queue.Queue):
         self.raw_string = ''
         self.translator = Translator()
-        self.raw_queue = queue.Queue()
+        self.raw_queue = raw_queue
         self.last_text = ''
-        mouse_track = threading.Thread(target=self.get_selection,
-                        args=(pdfViewer,))
-        mouse_track.start()
-
-        auto_translate = threading.Thread(target=self.translate,
-                                          args=(translate_text,))
-        auto_translate.start()
+        # mouse_track = threading.Thread(target=self.get_selection,
+        #                 args=(pdfViewer,))
+        # mouse_track.start()
+        #
+        # auto_translate = threading.Thread(target=self.translate,
+        #                                   args=(translate_text,))
+        # auto_translate.start()
 
     def get_selection(self, pdfViewer):
         # todo: 创建线程跟踪鼠标
@@ -49,7 +49,7 @@ class TrackMouse:
             # en_to_zh 是一个 property
             raw_text = self.raw_queue.get()
             self.translator.en_to_zh = raw_text
-            translate_text.setPlainText(self.translator.en_to_zh)
+            # translate_text.setPlainText(self.translator.en_to_zh)
 
 
 
