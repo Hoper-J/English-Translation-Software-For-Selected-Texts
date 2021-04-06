@@ -8,6 +8,7 @@ class HistoryFile:
         self.file_path = os.path.join(
             os.path.dirname(current_dir), 'files.dat')
         self.history_dt = shelve.open(self.file_path)
+        # todo: 对于移动了的文件的历史记录在报错后删除
         try:
             # shelve.open的返回并不是普通映射，应该用副本来修改值
             self.files = self.history_dt['filenames']
