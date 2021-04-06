@@ -7,9 +7,8 @@
 import queue
 import sys
 import threading
-import time
 
-from PyQt5.QtCore import QEvent, Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 
@@ -26,12 +25,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.history_file = HistoryFile()
-        self.translator = Translator() # property
-        self.signals = MutiSignal() # 定义了 鼠标release 以及 翻译完成 信号
-        self.raw_queue = queue.Queue() # 用于翻译线程
+        self.translator = Translator()  # property
+        self.signals = MutiSignal()  # 定义了 鼠标release 以及 翻译完成 信号
+        self.raw_queue = queue.Queue()  # 用于翻译线程
+        self.update_history_queue = queue.Queue()  # 更新历史记录栏
         self.init()
         self.update_text()
-
+        # self.update_history_file()
 
     def init(self):
         self.setWindowTitle("论文划线翻译")
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         gbox.setLayout(vbox)
 
         # 插入 pdf 阅读器
-        self.pdfViewer = PdfViewer(self.signals)
+        self.pdfViewer = PdfViewer(self)
         self.pdfViewer.setContentsMargins(0, 0, 0, 0)
         gbox.setContentsMargins(0, 0, 0, 0)
 
@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
         self.recent_text = ""
         self.showMaximized()
 
-        self.signals.mouse_release.connect(self.get_text)
+        self.signals.mouse_selected.connect(self.get_text)
         self.signals.translation_completed.connect(self.to_text_box)
 
         self.signals.change_pdf.connect(self.to_change_pdf)
@@ -104,15 +104,18 @@ class MainWindow(QMainWindow):
         生成线程处理翻译
         线程完成翻译时将触发文本更新信号
         """
-        auto_translate = threading.Thread(target=self.translate,
-                                          args=())
-        auto_translate.start()
+        thread_translate = threading.Thread(target=self.translate,
+                                            args=())
+        thread_translate.start()
 
         # 信号 selectionChanged 太"灵敏"了，不建议使用，其在鼠标未松开时依然一直触发
         # self.pdfViewer.selectionChanged.connect(self.get_text)
 
-
-
+    # def update_history_file(self):
+    #     while True:
+    #         self.update_history_queue.get()
+    #
+    #         pass
 
     def get_text(self):
         """将选中的文本加入未处理文本的"消费者"队列（raw_queue）"""
@@ -135,7 +138,6 @@ class MainWindow(QMainWindow):
             # pyqt5不允许在非主线程中使用信号槽
             self.signals.translation_completed.emit(self.translator.en_to_zh)
 
-
     def to_text_box(self, str=''):
         """将 str 打印到翻译文本框"""
         self.translate_text.setPlainText(str)
@@ -143,7 +145,8 @@ class MainWindow(QMainWindow):
     def to_change_pdf(self, pdf):
         self.pdfViewer.reload_pdf(pdf)
         self.history_file.store_file(pdf)
-        print(self.history_file.files)
+        # print(self.history_file.files)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
