@@ -22,8 +22,8 @@ class Translator:
     def en_to_zh(self, string=' '):
         """翻译字符串"""
         self.raw_string = string
-        # self.__baidu_translation()
-        self.__youdao_translation()
+        self.__baidu_translation()
+        # self.__youdao_translation()
 
     def __youdao_translation(self) -> str:
         """
@@ -68,7 +68,6 @@ class Translator:
             for res_line in res_paragraph['dst']:
                 res += res_line
             res += '\n'
-
         return res
 
 if __name__ == '__main__':

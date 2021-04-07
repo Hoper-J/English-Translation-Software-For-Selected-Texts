@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtWidgets
 class MenuBar():
     def __init__(self, MainWindow):
         self.main_window = MainWindow
-        self.files = self.main_window.history_file.files
+        self.files = self.main_window.history_files.files
         self.symbols = {'self': self, 'QtWidgets': QtWidgets,
                         "_translate": QtCore.QCoreApplication.translate}
         # todo: refactor
@@ -42,19 +42,24 @@ class MenuBar():
         # self.statusbar = QtWidgets.QStatusBar(MainWindow)
         # self.statusbar.setObjectName("statusbar")
         # MainWindow.setStatusBar(self.statusbar)
-        self.actionimport_PDF = QtWidgets.QAction(self.main_window)
-        self.actionimport_PDF.setObjectName("actionimport_PDF")
+        self.import_pdf = QtWidgets.QAction(self.main_window)
+        self.import_pdf.setObjectName("import_pdf")
+        self.clear_records = QtWidgets.QAction(self.main_window)
+        self.clear_records.setObjectName("clear_records")
 
         self._generate_history_actions()
         self._set_sizebar()  # 设置字号的action和triggered
 
-        self.menu_1.addAction(self.actionimport_PDF)
+        self.menu_1.addAction(self.import_pdf)
         self.menu_1.addAction(self.menu_3.menuAction())
+        self.menu_2.addAction(self.clear_records)
         self.menu_2.addAction(self.menu_4.menuAction())
+
 
         self.change_pdf = self.main_window.signals.change_pdf
 
-        self.actionimport_PDF.triggered.connect(self._import_pdf)
+        self.import_pdf.triggered.connect(self._import_pdf)
+        self.clear_records.triggered.connect(self._clear_records)
 
         self.retranslateUi(self.main_window)  # 重命名action的显示名字
 
@@ -92,15 +97,15 @@ class MenuBar():
                     self.symbols)
                 eval(f"self.menu_3.addAction(self.file{total-1})")
                 self.last_total = total  # 更新当前历史记录数量
-            for i in range(total):
-                filename = os.path.basename(self.files[i])
-                eval(f"self.file{i}.setObjectName('file{i}')")
-                eval(
-                    f"self.file{i}.triggered.connect(lambda:self._change_pdf('{self.files[i]}'))",
-                    self.symbols)
-                eval(
-                    f"self.file{i}.setText(_translate('MainWindow', '{filename}'))",
-                    self.symbols)
+        for i in range(total):
+            filename = os.path.basename(self.files[i])
+            eval(f"self.file{i}.setObjectName('file{i}')")
+            eval(
+                f"self.file{i}.triggered.connect(lambda:self._change_pdf('{self.files[i]}'))",
+                self.symbols)
+            eval(
+                f"self.file{i}.setText(_translate('MainWindow', '{filename}'))",
+                self.symbols)
 
         # else:
         #     if total < 10:
@@ -116,13 +121,13 @@ class MenuBar():
     def _set_sizebar(self):
         # 设置字号栏
         # https://stackoverflow.com/questions/47044129/nameerror-name-self-is-not-defined-after-using-eval
-        for i in range(8, 15):
+        for i in range(10, 16):
             exec(
                 f"self.size{i} = QtWidgets.QAction(self.main_window)",
                 self.symbols)
             eval(f"self.size{i}.setObjectName('size{i}')")
             eval(
-                f"self.size{i}.triggered.connect(lambda:self._change_pdf({i}))",
+                f"self.size{i}.triggered.connect(lambda:self._change_font_size({i}))",
                 self.symbols)
             eval(
                 f"self.size{i}.setText(_translate('MainWindow', '{i}'))",
@@ -144,8 +149,14 @@ class MenuBar():
 
         self._update_history_actions(pdf)  # 切换pdf更新历史记录
 
+    def _clear_records(self):
+        self.main_window.query_history_records.clear()
+        self.main_window.translation_records = ''  # 此时只要再查询一次，历史文件就会被刷新，所以注释了下面的语句，有需要再uncomment
+        # self.main_window.history_files.update_records('') # 更新历史文件
+
     def _change_font_size(self, size):
         self.main_window.translate_text.setStyleSheet(f"font: {size}pt")
+        self.main_window.query_history_records.setStyleSheet(f"font: {size}pt")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -153,6 +164,8 @@ class MenuBar():
         self.menu_2.setTitle(_translate("MainWindow", "编辑"))
         self.menu_3.setTitle(_translate("MainWindow", "历史记录"))
         self.menu_4.setTitle(_translate("MainWindow", "更改字号"))
-        self.actionimport_PDF.setText(_translate("MainWindow", "导入 PDF"))
+        self.import_pdf.setText(_translate("MainWindow", "导入 PDF"))
+        self.clear_records.setText(_translate("MainWindow", "清空历史查询"))
 
-        # self.action8.setShortcut(_translate("MainWindow", "Meta+C"))
+        self.import_pdf.setShortcut(_translate("MainWindow", "Ctrl+O"))
+        self.clear_records.setShortcut(_translate("MainWindow", "Ctrl+l"))

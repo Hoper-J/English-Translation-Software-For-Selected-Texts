@@ -7,23 +7,30 @@ class PdfViewer(QWebEngineView):
     def __init__(self, MainWindow):
         super().__init__()
         self._glwidget = None
-        self._PDFJS = 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/viewer.html'
-        try:
-            pdf = MainWindow.history_file.files[0]
-        except BaseException:
-            pdf = '/Users/home/Downloads/2021徐涛核心考案.pdf'
+        self.history_dt = MainWindow.history_files
+        self.records = ''
+        self.query_history_records = MainWindow.query_history_records
+        pdf = self.history_dt.current_file
+
         self.reload_pdf(pdf)
+
         self.mouse_selected = MainWindow.signals.mouse_selected
 
         self.installEventFilter(self)
 
     def reload_pdf(self, pdf):
         """导入其他pdf"""
-        self.pdf = pdf
+        PDFJS = 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
         self.load(
             QtCore.QUrl.fromUserInput(
                 '%s?file=%s' %
-                (self._PDFJS, self.pdf)))
+                (PDFJS, pdf)))
+
+        self.records = self.history_dt.get_records(pdf)
+        self.query_history_records.clear()
+        # self.query_history_records.setPlainText(self.records)
+        self.query_history_records.appendHtml(self.records)
+
 
     def _get_file_qurl(self, file_path):
         file_qurl = QtCore.QUrl.fromLocalFile(file_path)
@@ -38,21 +45,21 @@ class PdfViewer(QWebEngineView):
         """
         if self._glwidget is None:
             if e.type() == QEvent.ChildAdded and e.child().isWidgetType():
-                ###print('child add')
                 self._glwidget = e.child()
                 self._glwidget.installEventFilter(self)
         return super().event(e)
 
-    def mouseReleaseEvent(self, event):
-        self.mouse_selected.emit()
-        super().mouseReleaseEvent(event)
+
+    # def mouseReleaseEvent(self, event):
+    #     self.mouse_selected.emit()
+    #     super().mouseReleaseEvent(event)
 
     def eventFilter(self, obj, event):
         """
         捕获鼠标抬起事件失败的解决方法：
         https://stackoverflow.com/questions/50887951/pyqt4-mouse-release-event-not-working
         """
-        if event.type() == (QEvent.MouseButtonRelease | QEvent.MouseButtonDblClick):
+        if event.type() == (QEvent.MouseButtonRelease): # 我记得之前双击是奏效的，不知为何今天无法奏效 | QEvent.MouseButtonDblClick):
             self.mouse_selected.emit()
 
         return super().eventFilter(obj, event)

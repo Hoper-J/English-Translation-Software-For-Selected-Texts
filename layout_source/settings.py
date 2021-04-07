@@ -66,7 +66,9 @@ class Settings():
                 padding: 10px 5px 10px 5px;
             }
             
-            
+            # QPlainTextEdit{
+            #     font-size：14pt;
+            # }
             
             QSplitter:handle{
                 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
