@@ -9,6 +9,8 @@ FilePath: /my_translation/func_source/history_file.py
 import os
 import shelve
 
+from my_translation.const import CONST
+
 
 class HistoryFiles:
     def __init__(self):
@@ -18,23 +20,27 @@ class HistoryFiles:
         self.history_dt = shelve.open(self.file_path)
 
         self.files = [] # 将初始化定义移上来，可以省略finally中的操作
+        self.word_record = ''
 
         # todo: 对于移动了的文件的历史记录在报错后删除
         try:
             # shelve.open的返回并不是普通映射，应该用副本来修改值
             self.files = self.history_dt['filenames']
+            self.word_record = self.history_dt['word_record']
         except KeyError:
             self.history_dt['filenames'] = self.files
+            self.history_dt['word_record'] = self.word_record
         # finally:
         #     self.files = self.history_dt['filenames']
             # self.files.reverse()  # 历史记录应为倒序
 
         self.records = ''
+
         self.current_file = self.get_latest_file()
 
     def store_file(self, filename):
         """记录历史 (<=10)，超过后删除最早的历史"""
-        if len(self.files) >= 10:
+        if len(self.files) >= CONST.history_settings.history_file_number:
             del self.files[-1]
         try:
             self.files.remove(filename)
@@ -49,7 +55,7 @@ class HistoryFiles:
         try:
             return self.files[0]
         except IndexError:
-            return os.path.abspath("./readme.pdf")
+            return CONST.history_settings.initial_file
 
 
     def get_records(self, filename):
@@ -70,10 +76,17 @@ class HistoryFiles:
         # self.history_dt.close()
         # self.history_dt = shelve.open(self.file_path)  # 再次打开为了下次存储，但是应当有更简单的方法
 
+
+    def update_word(self, str):
+        self.word_record = str
+        self._update_database()
+
+
     def _update_database(self):
         """保存"""
         self.history_dt['filenames'] = self.files # list(reversed(self.files))
         self.history_dt[self.current_file] = self.records
+        self.history_dt['word_record'] = self.word_record
         self.history_dt.close()
         self.history_dt = shelve.open(self.file_path)  # 再次打开为了下次存储，但是应当有更简单的方法
 

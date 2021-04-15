@@ -12392,11 +12392,11 @@ class ViewHistory {
 
   async _writeToStorage() {
     const databaseStr = JSON.stringify(this.database);
-    localStorage.setItem("pdfjs.history", databaseStr);
+    localStorage.setItem("js_path.history_settings", databaseStr);
   }
 
   async _readFromStorage() {
-    return localStorage.getItem("pdfjs.history");
+    return localStorage.getItem("js_path.history_settings");
   }
 
   async set(name, val) {
@@ -12463,11 +12463,11 @@ exports.GenericCom = GenericCom;
 
 class GenericPreferences extends _preferences.BasePreferences {
   async _writeToStorage(prefObj) {
-    localStorage.setItem("pdfjs.preferences", JSON.stringify(prefObj));
+    localStorage.setItem("js_path.preferences", JSON.stringify(prefObj));
   }
 
   async _readFromStorage(prefObj) {
-    return JSON.parse(localStorage.getItem("pdfjs.preferences"));
+    return JSON.parse(localStorage.getItem("js_path.preferences"));
   }
 
 }
@@ -12684,7 +12684,7 @@ class DownloadManager {
       return;
     }
 
-    download(url + "#pdfjs.action=download", filename);
+    download(url + "#js_path.action=download", filename);
   }
 
   downloadData(data, filename, contentType) {

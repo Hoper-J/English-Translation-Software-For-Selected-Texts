@@ -64,10 +64,21 @@ class Translator:
         """处理百度翻译"""
         # todo: 对查询的特定单词进行格式处理 try: result['simple_means']
         res = ''
-        for res_paragraph in result['trans_result']['data']:
-            for res_line in res_paragraph['dst']:
-                res += res_line
-            res += '\n'
+        try:
+            simple_means = result['dict_result']['simple_means'] # 如果引起KeyError，代表查询的内容是句子
+
+            dict = simple_means['symbols'][0]
+            res += f"英 [{dict['ph_en']}]\n美 [{dict['ph_am']}]\n"
+
+            means = dict['parts']
+            for mean in means:
+                res += mean['part'] + ';'.join(mean['means']) + '\n'
+
+        except KeyError:
+            for res_paragraph in result['trans_result']['data']:
+                for res_line in res_paragraph['dst']:
+                    res += res_line
+                res += '\n'
         return res
 
 if __name__ == '__main__':
