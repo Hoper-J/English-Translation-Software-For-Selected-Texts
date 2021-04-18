@@ -7,10 +7,11 @@
  * @FilePath: /undefined/Users/home/PycharmProjects/pythonProject1/my_translation/readme.md
 -->
 # 划线翻译
-> 使用的第三方库：OCRmyPDF, PyPDF2, PyQt5, requests
-> 感谢以下两个仓库给我提供的帮助：
-> [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路，早点发现我也不会纠结半天了:)
-> 以及[百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助
+感谢以下两个仓库给我提供的帮助：
+1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路，早点发现我也不会纠结半天了:)
+2. [百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助
+
+软件使用的第三方库：OCRmyPDF, PyPDF2, PyQt5, requests
 
 ## 功能
 
