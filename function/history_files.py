@@ -8,7 +8,7 @@ class HistoryFiles:
     def __init__(self):
         current_dir = os.path.split(os.path.realpath(__file__))[0]
         self.file_path = os.path.join(
-            os.path.dirname(current_dir), 'history_data.dat')
+            os.path.dirname(current_dir),'file', 'history_data.dat')
         self.history_dt = shelve.open(self.file_path)
 
         self.files = []  # 将初始化定义移上来，可以省略finally中的操作

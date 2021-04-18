@@ -15,7 +15,7 @@ def Const(cls):
 @Const
 class _HistoryFiles(object):
     history_file_number = 10  # 历史文件记录上限
-    initial_file = os.path.abspath("./readme.pdf")
+    initial_file = os.path.abspath("file/readme.pdf")
 
 
 @Const
