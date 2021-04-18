@@ -5155,7 +5155,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
     ctx.lineCap = "butt";
     ctx.lineJoin = "miter";
     ctx.miterLimit = 10;
-    ctx.globalCompositeOperation = "layout_source-over";
+    ctx.globalCompositeOperation = "layout-over";
     ctx.font = "10px sans-serif";
 
     if (ctx.setLineDash !== undefined) {
@@ -5492,7 +5492,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
       activeSMask.startTransformInverse = groupCtx.mozCurrentTransformInverse;
       copyCtxState(currentCtx, groupCtx);
       this.ctx = groupCtx;
-      this.setGState([["BM", "layout_source-over"], ["ca", 1], ["CA", 1]]);
+      this.setGState([["BM", "layout-over"], ["ca", 1], ["CA", 1]]);
       this.groupStack.push(currentCtx);
       this.groupLevel++;
     },
@@ -6332,7 +6332,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
 
       copyCtxState(currentCtx, groupCtx);
       this.ctx = groupCtx;
-      this.setGState([["BM", "layout_source-over"], ["ca", 1], ["CA", 1]]);
+      this.setGState([["BM", "layout-over"], ["ca", 1], ["CA", 1]]);
       this.groupStack.push(currentCtx);
       this.groupLevel++;
       this.current.activeSMask = null;
@@ -6422,7 +6422,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
       var maskCtx = maskCanvas.context;
       maskCtx.save();
       putBinaryImageMask(maskCtx, img);
-      maskCtx.globalCompositeOperation = "layout_source-in";
+      maskCtx.globalCompositeOperation = "layout-in";
       maskCtx.fillStyle = isPatternFill ? fillColor.getPattern(maskCtx, this) : fillColor;
       maskCtx.fillRect(0, 0, width, height);
       maskCtx.restore();
@@ -6442,7 +6442,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
       var maskCtx = maskCanvas.context;
       maskCtx.save();
       putBinaryImageMask(maskCtx, imgData);
-      maskCtx.globalCompositeOperation = "layout_source-in";
+      maskCtx.globalCompositeOperation = "layout-in";
       maskCtx.fillStyle = isPatternFill ? fillColor.getPattern(maskCtx, this) : fillColor;
       maskCtx.fillRect(0, 0, width, height);
       maskCtx.restore();
@@ -6474,7 +6474,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
         var maskCtx = maskCanvas.context;
         maskCtx.save();
         putBinaryImageMask(maskCtx, image);
-        maskCtx.globalCompositeOperation = "layout_source-in";
+        maskCtx.globalCompositeOperation = "layout-in";
         maskCtx.fillStyle = isPatternFill ? fillColor.getPattern(maskCtx, this) : fillColor;
         maskCtx.fillRect(0, 0, width, height);
         maskCtx.restore();

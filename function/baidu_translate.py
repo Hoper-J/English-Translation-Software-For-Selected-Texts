@@ -1,8 +1,7 @@
 import re
-import requests
 
 import execjs
-
+import requests
 
 JS_CODE = """
 function a(r, o) {

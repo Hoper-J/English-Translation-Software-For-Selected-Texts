@@ -1,34 +1,23 @@
-"""
-
-
-"""
-
 import datetime
+import multiprocessing
 import os
-import platform
 import queue
 import shutil
 import sys
 import threading
 
-import multiprocessing
-
-import ocrmypdf
 import PyPDF2
-
+import ocrmypdf
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 
 from const import CONST
-
-from func_source.history_files import HistoryFiles
-from func_source.mutisignal import MutiSignal
-from func_source.translator import Translator
-
-from layout_source.menubar import MenuBar
-from layout_source.pdfviewer import PdfViewer
-from layout_source.settings import Settings
+from function.history_files import HistoryFiles
+from function.mutisignal import MutiSignal
+from function.translator import Translator
+from layout.menubar import MenuBar
+from layout.pdfviewer import PdfViewer
 
 
 class MainWindow(QMainWindow):
@@ -156,6 +145,7 @@ class MainWindow(QMainWindow):
 
     def to_text_box(self, str=''):
         """将 str 打印到翻译文本框"""
+        # todo : 分离翻译和历史记录保存，创建一个线程每隔一段时间自动保存历史记录
         self.translate_text.setPlainText(str)
         if str[0] == '英':
             # 通过判断翻译处理结果的首个词是否为 英，来判断是否是单词

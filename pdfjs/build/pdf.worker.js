@@ -8979,7 +8979,7 @@ const CCITTFaxDecoder = function CCITTFaxDecoder() {
 
   function CCITTFaxDecoder(source, options = {}) {
     if (!source || typeof source.next !== "function") {
-      throw new Error('CCITTFaxDecoder - invalid "layout_source" parameter.');
+      throw new Error('CCITTFaxDecoder - invalid "layout" parameter.');
     }
 
     this.source = source;
@@ -21508,7 +21508,7 @@ function normalizeBlendMode(value, parsingArray = false) {
     }
 
     (0, _util.warn)(`Unsupported blend mode Array: ${value}`);
-    return "layout_source-over";
+    return "layout-over";
   }
 
   if (!(0, _primitives.isName)(value)) {
@@ -21516,13 +21516,13 @@ function normalizeBlendMode(value, parsingArray = false) {
       return null;
     }
 
-    return "layout_source-over";
+    return "layout-over";
   }
 
   switch (value.name) {
     case "Normal":
     case "Compatible":
-      return "layout_source-over";
+      return "layout-over";
 
     case "Multiply":
       return "multiply";
@@ -21575,7 +21575,7 @@ function normalizeBlendMode(value, parsingArray = false) {
   }
 
   (0, _util.warn)(`Unsupported blend mode: ${value.name}`);
-  return "layout_source-over";
+  return "layout-over";
 }
 
 class TimeSlotManager {
