@@ -28,10 +28,11 @@ class MainWindow(QMainWindow):
         self.signals = MutiSignal()  # 定义了 鼠标release 以及 翻译完成 信号
         self.raw_queue = queue.Queue()  # 用于翻译线程
         self._init()
-        self.translation_records = self.pdfViewer.records # 获取查询的历史记录
+        self.translation_records = self.pdfViewer.records  # 获取查询的历史记录
         self.word_records = ''
         self.update_text()
         # self.update_history_file()
+
     def _init(self):
         self.setWindowTitle("论文划线翻译")
         self.setWindowIcon(QIcon("./image/logo.ico"))
@@ -107,7 +108,6 @@ class MainWindow(QMainWindow):
         self.signals.change_pdf.connect(self.to_change_pdf)
         # self.signals.ocr_pdf.connect(self.to_ocr_pdf)
 
-
     def get_text(self):
         """将选中的文本加入未处理文本的"消费者"队列（raw_queue）"""
         if self.pdfViewer.hasSelection():
@@ -175,53 +175,6 @@ class MainWindow(QMainWindow):
         self.translation_records = self.pdfViewer.records
         self.history_files.store_file(pdf)
         # print(self.history_file.files)
-
-    def to_ocr_pdf(self, statusbar):
-        ocr_process = multiprocessing.Process(target=self._ocr, args=(statusbar,))
-        ocr_process.start()
-
-    def _ocr(self, statusbar):
-        file_path, file_type = QFileDialog.getOpenFileName(
-            self, "选取文件", os.getcwd(), "All Files(*);;Text Files(*.txt)")
-
-        if file_path:
-            # 备份文件
-            backup_file = file_path + ".backup"
-            shutil.copy(file_path, backup_file)
-
-            OK = 'ExitCode.ok'  # ocr成功的返回值
-            # dirpath, filename = os.path.split(filepath)
-
-            # before = time.time()
-            # 估算预计完成时间
-            pdfFileObj = open(file_path, 'rb')
-            pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-            expected_time = pdfReader.numPages * 2.5
-            t = expected_time
-            if t // 3600:
-                status_msg = "预计将在{:.0f}小时{:.0f}分钟{:.0f}秒后完成OCR".format(t // 3600, t // 60, t % 60)
-            elif t // 60:
-                status_msg = "预计将在{:.0f}分钟{:.0f}秒后完成OCR".format(t // 60, t % 60)
-            else:
-                status_msg = "预计将在{:.0f}秒后完成OCR".format(t % 60)
-
-            filename = os.path.basename(file_path)
-
-            # 状态栏提示信息
-            statusbar.show()
-            statusbar.showMessage(filename + status_msg)
-
-            # OCR
-            return_code = ocrmypdf.ocr(file_path, file_path,
-                                            optimize=3, use_threads=True, output_type='pdf', force_ocr=True,
-                                            progress_bar=True)  # in place
-            # after = time.time()
-            # print(after-before)
-            if self.return_code == OK:
-
-                status_msg = f"OCR {filename} 已经完成"
-                self.statusbar.showMessage(status_msg)
-                print("完成")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

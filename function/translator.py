@@ -9,9 +9,10 @@ class Translator:
 
     tip: 感觉这样写不易读，不过为了练习一下学的内容，暂时就不改了
     """
+
     def __init__(self):
         self.res = None
-        self.baidu_dict = Dict() # 只获取一次html源码中的参数，加快翻译速度，如果每次都获取，速度差不多只有1/3
+        self.baidu_dict = Dict()  # 只获取一次html源码中的参数，加快翻译速度，如果每次都获取，速度差不多只有1/3
 
     @property
     def en_to_zh(self):
@@ -46,7 +47,8 @@ class Translator:
             print(e)
 
     def __baidu_translation(self):
-        result = self.baidu_dict.dictionary(self.raw_string, dst='zh', src='en') # json
+        result = self.baidu_dict.dictionary(
+            self.raw_string, dst='zh', src='en')  # json
         self.res = self.__deal_with_bd_translation(result)
         # print(self.res)
 
@@ -65,7 +67,8 @@ class Translator:
         # todo: 对查询的特定单词进行格式处理 try: result['simple_means']
         res = ''
         try:
-            simple_means = result['dict_result']['simple_means'] # 如果引起KeyError，代表查询的内容是句子
+            # 如果引起KeyError，代表查询的内容是句子
+            simple_means = result['dict_result']['simple_means']
 
             dict = simple_means['symbols'][0]
             res += f"英 [{dict['ph_en']}]\n美 [{dict['ph_am']}]\n"
@@ -80,6 +83,7 @@ class Translator:
                     res += res_line
                 res += '\n'
         return res
+
 
 if __name__ == '__main__':
 

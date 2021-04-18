@@ -38,7 +38,6 @@ class PdfViewer(QWebEngineView):
         # self.history_query.setPlainText(self.records)
         self.query_history_records.appendHtml(self.records)
 
-
     def _get_file_qurl(self, file_path):
         file_qurl = QtCore.QUrl.fromLocalFile(file_path)
         return QtCore.QUrl.toString(file_qurl)
@@ -56,7 +55,6 @@ class PdfViewer(QWebEngineView):
                 self._glwidget.installEventFilter(self)
         return super().event(e)
 
-
     # def mouseReleaseEvent(self, event):
     #     self.mouse_selected.emit()
     #     super().mouseReleaseEvent(event)
@@ -66,11 +64,9 @@ class PdfViewer(QWebEngineView):
         捕获鼠标抬起事件失败的解决方法：
         https://stackoverflow.com/questions/50887951/pyqt4-mouse-release-event-not-working
         """
-        if event.type() == (QEvent.MouseButtonRelease): # 我记得之前双击是奏效的，不知为何今天无法奏效 | QEvent.MouseButtonDblClick):
+        if event.type() == (
+                QEvent.MouseButtonRelease):  # 我记得之前双击是奏效的，不知为何今天无法奏效 | QEvent.MouseButtonDblClick):
             self.mouse_selected.emit()
 
         return super().eventFilter(obj, event)
-    # def eventFilter(self, source, event) -> bool:
-    #     if event.type() == QEvent.MouseButtonRelease:
-    #         self.mouse_selected.emit()
-    #     return super().eventFilter(source, event)
+

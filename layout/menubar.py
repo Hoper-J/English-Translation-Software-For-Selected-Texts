@@ -24,7 +24,8 @@ class MenuBar():
         m = multiprocessing.Manager()
         self.OCR_queue = m.Queue()
 
-        self.detection_ocr_achieved = threading.Thread(target=self._detection_ocr_achieved, daemon=True)
+        self.detection_ocr_achieved = threading.Thread(
+            target=self._detection_ocr_achieved, daemon=True)
         self.detection_ocr_achieved.start()
 
         self._process = QtCore.QProcess()
@@ -33,7 +34,6 @@ class MenuBar():
         self._timer = QtCore.QTimer()
 
         self.last_total = len(self.files)
-
 
     def set_menubar(self):
         self.menubar = QtWidgets.QMenuBar(self.main_window)
@@ -146,17 +146,6 @@ class MenuBar():
                 f"self.file{i}.setText(_translate('MainWindow', '{filename}'))",
                 self.symbols)
 
-        # else:
-        #     if total < 10:
-        #         exec(f"self.file{total-1} = QtWidgets.QAction(self.main_window)", self.symbols)
-        #         eval(f"self.menu_3.addAction(self.file{total-1})")
-        #         self.last_total = total # 更新当前历史记录数量
-        #     for i in range(total):
-        #         filename = os.path.basename(self.files[i])
-        #         eval(f"self.file{i}.setObjectName('file{i}')")
-        #         eval(f"self.file{i}.triggered.connect(lambda:self._change_pdf('{self.files[i]}'))", self.symbols)
-        #         eval(f"self.file{i}.setText(_translate('MainWindow', '{filename}'))", self.symbols)
-
     def _set_sizebar(self):
         # 设置字号栏
         # https://stackoverflow.com/questions/47044129/nameerror-name-self-is-not-defined-after-using-eval
@@ -193,7 +182,8 @@ class MenuBar():
 
     def _clear_records(self):
         self.main_window.history_query.clear()
-        self.main_window.translation_records = ''  # 此时只要再查询一次，历史文件就会被刷新，所以注释了下面的语句，有需要再uncomment
+        # 此时只要再查询一次，历史文件就会被刷新，所以注释了下面的语句，有需要再uncomment
+        self.main_window.translation_records = ''
         # self.main_window.history_files.update_records('') # 更新历史文件
 
     def _begin_ocr(self):
@@ -204,8 +194,6 @@ class MenuBar():
 
         ocr_process = Process(target=self._ocr, args=(file_path,))
         ocr_process.start()
-
-
 
     def _detection_ocr_achieved(self):
         while True:
@@ -219,7 +207,8 @@ class MenuBar():
         expected_time = pdfReader.numPages * 2.5
         t = expected_time
         if t // 3600:
-            status_msg = " 预计将在{:.0f}小时{:.0f}分钟{:.0f}秒后完成OCR".format(t // 3600, t // 60, t % 60)
+            status_msg = " 预计将在{:.0f}小时{:.0f}分钟{:.0f}秒后完成OCR".format(
+                t // 3600, t // 60, t % 60)
         elif t // 60:
             status_msg = " 预计将在{:.0f}分钟{:.0f}秒后完成OCR".format(t // 60, t % 60)
         else:
@@ -234,19 +223,17 @@ class MenuBar():
             # 备份文件
             backup_file = file_path + ".backup"
             shutil.copy(file_path, backup_file)
-            OK = ocrmypdf.ExitCode.ok  # ocr成功的返回值
-            # dirpath, filename = os.path.split(filepath)
+            ok = ocrmypdf.ExitCode.ok  # ocr成功的返回值
+            return_code = ocrmypdf.ocr(
+                file_path,
+                file_path,
+                optimize=3,
+                use_threads=True,
+                output_type='pdf',
+                force_ocr=True,
+                progress_bar=True)  # in place
 
-            # before = time.time()
-            # OCR
-            return_code = ocrmypdf.ocr(file_path, file_path,
-                                            optimize=3, use_threads=True, output_type='pdf', force_ocr=True,
-                                            progress_bar=True)  # in place
-
-            # after = time.time()
-            # print(after-before)
-
-            if return_code == OK:
+            if return_code == ok:
                 self.OCR_queue.put((file_path, 'ok'))
 
     def _change_font_size(self, size):
@@ -265,6 +252,3 @@ class MenuBar():
 
         self.import_pdf.setShortcut(_translate("MainWindow", "Ctrl+O"))
         self.clear_records.setShortcut(_translate("MainWindow", "Ctrl+l"))
-
-
-

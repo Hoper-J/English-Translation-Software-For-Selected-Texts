@@ -14,12 +14,15 @@ def Const(cls):
 
 @Const
 class _HistoryFiles(object):
-    history_file_number = 10 # 历史文件记录上限
+    history_file_number = 10  # 历史文件记录上限
     initial_file = os.path.abspath("./readme.pdf")
+
 
 @Const
 class _PdfViewer(object):
-    js_path = 'file://' + os.path.abspath("./pdfjs/web/new_viewer.html") # 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
+    # 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
+    js_path = 'file://' + os.path.abspath("./pdfjs/web/new_viewer.html")
+
 
 @Const
 class _MainWindow(object):
@@ -49,11 +52,11 @@ class _MainWindow(object):
                 }
                 QTabBar::tab {
                     border: 1px solid black;
-                    background: rgb(230, 230, 230); 
+                    background: rgb(230, 230, 230);
                 }
                 QTabBar::tab:selected {
                     background: white;
-                    margin-bottom: -1px; 
+                    margin-bottom: -1px;
                 }
                 QTabBar::tab:!selected {
                     background: silver;
@@ -90,10 +93,10 @@ class _MainWindow(object):
 
 
                 QSplitter:handle{
-                    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
-                        stop:0 rgba(255, 255, 255, 0), 
-                        stop:0.407273 rgba(200, 200, 200, 255), 
-                        stop:0.4825 rgba(101, 104, 113, 235), 
+                    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+                        stop:0 rgba(255, 255, 255, 0),
+                        stop:0.407273 rgba(200, 200, 200, 255),
+                        stop:0.4825 rgba(101, 104, 113, 235),
                         stop:0.6 rgba(255, 255, 255, 0));
 
 
@@ -106,9 +109,10 @@ class _MainWindow(object):
 
             """
 
+
 @Const
 class _MenuBar(object):
-    font_size_range = range(10, 16) # 字号范围 10-15
+    font_size_range = range(10, 16)  # 字号范围 10-15
 
 
 @Const
