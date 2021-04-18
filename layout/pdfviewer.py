@@ -2,6 +2,8 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QEvent
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
+from my_translation.const import CONST
+
 
 class PdfViewer(QWebEngineView):
     def __init__(self, MainWindow):
@@ -9,7 +11,12 @@ class PdfViewer(QWebEngineView):
         self._glwidget = None
         self.history_dt = MainWindow.history_files
         self.records = ''
-        self.query_history_records = MainWindow.query_history_records
+        self.query_history_records = MainWindow.history_query
+
+        self.word_record = MainWindow.word_record
+        self.word_records = self.history_dt.word_record
+        self.word_record.setPlainText(self.word_records)
+
         pdf = self.history_dt.current_file
 
         self.reload_pdf(pdf)
@@ -20,7 +27,7 @@ class PdfViewer(QWebEngineView):
 
     def reload_pdf(self, pdf):
         """导入其他pdf"""
-        PDFJS = 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
+        PDFJS = CONST.pdf_settings.js_path
         self.load(
             QtCore.QUrl.fromUserInput(
                 '%s?file=%s' %
@@ -28,7 +35,7 @@ class PdfViewer(QWebEngineView):
 
         self.records = self.history_dt.get_records(pdf)
         self.query_history_records.clear()
-        # self.query_history_records.setPlainText(self.records)
+        # self.history_query.setPlainText(self.records)
         self.query_history_records.appendHtml(self.records)
 
 
