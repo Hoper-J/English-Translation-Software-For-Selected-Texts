@@ -130,6 +130,7 @@ class MenuBar():
             # 通过对比当前历史记录和之前历史记录的数量，来判断是否导入了新的pdf
             if total < CONST.history_settings.history_file_number:  # 该常量默认为10
                 # 如果大于上一次历史记录的数量且小于10，那么代表导入了新的pdf，需要创建新action
+                # todo: 如果以后需要重新涉及到PyQt5的话，顺便找一下有没有内置自动更新的button
                 exec(
                     f"self.file{total - 1} = QtWidgets.QAction(self.main_window)",
                     self.symbols)
@@ -181,10 +182,10 @@ class MenuBar():
         self._update_history_actions(pdf)  # 切换pdf更新历史记录
 
     def _clear_records(self):
-        self.main_window.history_query.clear()
+        self.main_window.sentence_query_records.clear()
         # 此时只要再查询一次，历史文件就会被刷新，所以注释了下面的语句，有需要再uncomment
-        self.main_window.translation_records = ''
-        # self.main_window.history_files.update_records('') # 更新历史文件
+        self.main_window.translation_sentence = ''
+        # self.main_window.history_files.update_sentence_records('') # 更新历史文件
 
     def _begin_ocr(self):
         file_path = self._get_file_path()
@@ -237,16 +238,16 @@ class MenuBar():
                 self.OCR_queue.put((file_path, 'ok'))
 
     def _change_font_size(self, size):
-        self.main_window.translate_text.setStyleSheet(f"font: {size}pt")
-        self.main_window.history_query.setStyleSheet(f"font: {size}pt")
+        self.main_window.translated_text.setStyleSheet(f"font: {size}pt")
+        self.main_window.sentence_query_records.setStyleSheet(f"font: {size}pt")
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.menu_1.setTitle(_translate("MainWindow", "文件"))
         self.menu_2.setTitle(_translate("MainWindow", "编辑"))
-        self.menu_3.setTitle(_translate("MainWindow", "历史记录"))
+        self.menu_3.setTitle(_translate("MainWindow", "最近打开"))
         self.menu_4.setTitle(_translate("MainWindow", "更改字号"))
-        self.import_pdf.setText(_translate("MainWindow", "导入 PDF"))
+        self.import_pdf.setText(_translate("MainWindow", "打开 PDF"))
         self.clear_records.setText(_translate("MainWindow", "清空历史查询"))
         self.ocr.setText(_translate("MainWindow", "OCR"))
 

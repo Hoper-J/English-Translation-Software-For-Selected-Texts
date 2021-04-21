@@ -11,9 +11,9 @@ class PdfViewer(QWebEngineView):
         self._glwidget = None
         self.history_dt = MainWindow.history_files
         self.records = ''
-        self.query_history_records = MainWindow.history_query
+        self.query_history_records = MainWindow.sentence_query_records
 
-        self.word_record = MainWindow.word_record
+        self.word_record = MainWindow.word_query_records
         self.word_records = self.history_dt.word_record
         self.word_record.setPlainText(self.word_records)
 
@@ -35,7 +35,7 @@ class PdfViewer(QWebEngineView):
 
         self.records = self.history_dt.get_records(pdf)
         self.query_history_records.clear()
-        # self.history_query.setPlainText(self.records)
+        # self.sentence_query_records.setPlainText(self.records)
         self.query_history_records.appendHtml(self.records)
 
     def _get_file_qurl(self, file_path):

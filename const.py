@@ -21,11 +21,12 @@ class _HistoryFiles(object):
 @Const
 class _PdfViewer(object):
     # 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
-    js_path = 'file://' + os.path.abspath("./pdfjs/web/new_viewer.html")
+    js_path = "file://" + os.path.abspath("./pdfjs/web/new_viewer.html")
 
 
 @Const
 class _MainWindow(object):
+    text_format_en = '<span style = "font-size: 14pt; font-family: Times New Roman;">'  # 历史查询中英文文本的格式
     style_sheet = """
 
                 /* QMainWindow{

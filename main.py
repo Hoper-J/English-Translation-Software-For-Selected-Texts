@@ -1,15 +1,9 @@
 import datetime
-import multiprocessing
-import os
 import queue
-import shutil
 import sys
 import threading
 
-import PyPDF2
-import ocrmypdf
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 
 from const import CONST
@@ -25,17 +19,16 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.history_files = HistoryFiles()
         self.translator = Translator()  # property
-        self.signals = MutiSignal()  # 定义了 鼠标release 以及 翻译完成 信号
+        self.signals = MutiSignal()  # 定义了 鼠标selected / 翻译完成 / PDF切换 / OCR状态 信号
         self.raw_queue = queue.Queue()  # 用于翻译线程
-        self._init()
-        self.translation_records = self.pdfViewer.records  # 获取查询的历史记录
-        self.word_records = ''
+        self._init()  # 设置主界面
+        self.translation_sentence = self.pdfViewer.records  # 获取初始化后打开的PDF的历史记录
+        self.translation_word = ''
         self.update_text()
-        # self.update_history_file()
 
     def _init(self):
         self.setWindowTitle("论文划线翻译")
-        self.setWindowIcon(QIcon("./image/logo.ico"))
+        # self.setWindowIcon(QIcon("./image/logo.ico"))
 
         # 以下为界面 UI
         tab = QTabWidget()
@@ -51,33 +44,32 @@ class MainWindow(QMainWindow):
         tab2.setObjectName('tab2')
         tab3.setObjectName('tab3')
 
-        self.translate_text = QPlainTextEdit()
-        self.translate_text.setObjectName('translate_text')
-        self.history_query = QPlainTextEdit()
-        self.history_query.setObjectName('history_query')
-        self.word_record = QPlainTextEdit()
-        self.word_record.setObjectName('word_record')
+        self.translated_text = QPlainTextEdit()
+        self.translated_text.setObjectName('translated_text')
+        self.sentence_query_records = QPlainTextEdit()
+        self.sentence_query_records.setObjectName('sentence_query_records')
+        self.word_query_records = QPlainTextEdit()
+        self.word_query_records.setObjectName('word_query_records')
 
-        translate_layout = QVBoxLayout()
-        translate_layout.addWidget(self.translate_text)
-        translate_layout.setContentsMargins(0, 0, 0, 0)  # 设置文本框边缘贴近整个窗口
-        tab1.setLayout(translate_layout)
+        translation_window = QVBoxLayout()
+        translation_window.addWidget(self.translated_text)
+        translation_window.setContentsMargins(0, 0, 0, 0)  # 设置文本框边缘贴近整个窗口
+        tab1.setLayout(translation_window)
 
-        records_layout = QVBoxLayout()
-        records_layout.addWidget(self.history_query)
-        records_layout.setContentsMargins(0, 0, 0, 0)
-        tab2.setLayout(records_layout)
+        sentence_window = QVBoxLayout()
+        sentence_window.addWidget(self.sentence_query_records)
+        sentence_window.setContentsMargins(0, 0, 0, 0)
+        tab2.setLayout(sentence_window)
 
-        words_layout = QVBoxLayout()
-        words_layout.addWidget(self.word_record)
-        words_layout.setContentsMargins(0, 0, 0, 0)
-        tab3.setLayout(words_layout)
+        words_window = QVBoxLayout()
+        words_window.addWidget(self.word_query_records)
+        words_window.setContentsMargins(0, 0, 0, 0)
+        tab3.setLayout(words_window)
 
         vbox = QVBoxLayout()
         vbox.addWidget(tab)
 
         gbox = QGroupBox()
-        # gbox.setStyleSheet("font: 12pt")
         gbox.setLayout(vbox)
 
         # 插入 pdf 阅读器
@@ -86,13 +78,13 @@ class MainWindow(QMainWindow):
         gbox.setContentsMargins(0, 0, 0, 0)
 
         # 将pdf和翻译放进垂直布局的box中，并使其可通过中间的Splitter修改左右窗口大小
-        hBoxLayout = QHBoxLayout()
+        hbox = QHBoxLayout()
         splitter1 = QSplitter(Qt.Horizontal)
         splitter1.addWidget(self.pdfViewer)
         splitter1.addWidget(gbox)
-        hBoxLayout.addWidget(splitter1)
+        hbox.addWidget(splitter1)
         widget = QWidget()
-        widget.setLayout(hBoxLayout)
+        widget.setLayout(hbox)
 
         self.setCentralWidget(widget)
         self.recent_text = ""
@@ -138,42 +130,45 @@ class MainWindow(QMainWindow):
     def translate(self):
         """返回翻译的内容"""
         while True:
-            # en_to_zh 是一个 property
             raw_text = self.raw_queue.get()
+
+            # en_to_zh 是一个 property
             self.translator.en_to_zh = raw_text
             self.signals.translation_completed.emit(self.translator.en_to_zh)
 
-    def to_text_box(self, str=''):
-        """将 str 打印到翻译文本框"""
-        # todo : 分离翻译和历史记录保存，创建一个线程每隔一段时间自动保存历史记录
-        self.translate_text.setPlainText(str)
-        if str[0] == '英':
+    def to_text_box(self, translation_results=''):
+        """将 translation_results 打印到翻译文本框"""
+        self.translated_text.setPlainText(translation_results)
+        if translation_results[0] == '英':
             # 通过判断翻译处理结果的首个词是否为 英，来判断是否是单词
-            self.word_records += f"{self.selected_text}\n{str}\n"
-            self.word_record.appendPlainText(self.word_records)
+            self.translation_word += f"{self.selected_text}\n{translation_results}\n"
+            self.word_query_records.appendPlainText(self.translation_word)
         else:
+            # 设置句子的展现格式
             now_time = datetime.datetime.now().strftime('%Y-%m-%d %X')
             self.html_str = f"""
                         <b>[{now_time}]</b><br>
-                        <span style = "font-size: 14pt; font-family: Times New Roman;">
+                        {CONST.main_window.text_format_en}
                         {self.selected_text}
                         </span><br><br>
-                        {str}<br>
+                        {translation_results}<br>
                     """
-            self.translation_records += self.html_str
-            self.history_query.appendHtml(self.html_str)
-        # self.no_style_str = f"[{now_time}]\n{self.selected_text}\n\n{str}\n"
-        # self.translation_records += self.no_style_str
-        # self.history_query.appendPlainText(self.no_style_str)
+            self.translation_sentence += self.html_str
+            self.sentence_query_records.appendHtml(self.html_str)
+        # self.no_style_str = f"[{now_time}]\n{self.selected_text}\n\n{translation_results}\n"
+        # self.translation_sentence += self.no_style_str
+        # self.sentence_query_records.appendPlainText(self.no_style_str)
 
-        self.history_files.update_records(self.translation_records)
-        self.history_files.update_word(self.word_records)
+        # todo : 分离翻译和历史记录的保存流程，创建一个线程每隔一段时间自动保存历史记录 或者 采取更好的方法
+        self.history_files.update_sentence_records(self.translation_sentence)
+        self.history_files.update_word_records(self.translation_word)
 
     def to_change_pdf(self, pdf):
-        self.history_files.store_file(pdf)
+        """执行切换PDF后的操作"""
+        self.history_files.update_recent_open_file(pdf)
         self.pdfViewer.reload_pdf(pdf)
-        self.translation_records = self.pdfViewer.records
-        self.history_files.store_file(pdf)
+        self.translation_sentence = self.pdfViewer.records  # 随着PDF的切换，更新查询记录
+        # self.history_files.update_recent_open_file(pdf) # 这里不记得该不该注释了，故暂不删除，如果最近打开有bug取消注释
         # print(self.history_file.files)
 
 if __name__ == '__main__':
@@ -183,4 +178,5 @@ if __name__ == '__main__':
     # 设置菜单栏
     menu_bar = MenuBar(main_window)
     main_window.show()
+
     sys.exit(app.exec_())
