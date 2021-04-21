@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-07 14:19:52
- * @LastEditTime: 2021-04-18 16:39:55
+ * @LastEditTime: 2021-04-21 20:58:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /undefined/Users/home/PycharmProjects/pythonProject1/my_translation/readme.md
@@ -11,7 +11,7 @@
 1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路，早点发现我也不会纠结半天了:)
 2. [百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助
 
-软件使用的第三方库：OCRmyPDF, PyPDF2, PyQt5, requests
+软件使用的第三方库：execjs, OCRmyPDF, PyPDF2, PyQt5, requests
 
 ## 功能
 
