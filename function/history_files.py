@@ -30,7 +30,7 @@ class HistoryFiles:
 
         self.current_file = self.get_latest_file()
 
-    def store_file(self, filename):
+    def update_recent_open_file(self, filename):
         """记录历史 (<=10)，超过后删除最早的历史"""
         if len(self.files) >= CONST.history_settings.history_file_number:
             del self.files[-1]
@@ -60,7 +60,7 @@ class HistoryFiles:
 
         return self.records
 
-    def update_records(self, str):
+    def update_sentence_records(self, str):
         self.records = str
         self._update_database()  # store_file和当前函数有冗余调用，todo:优化
 
@@ -68,7 +68,7 @@ class HistoryFiles:
         # self.history_dt = shelve.open(self.file_path)  #
         # 再次打开为了下次存储，但是应当有更简单的方法
 
-    def update_word(self, str):
+    def update_word_records(self, str):
         self.word_record = str
         self._update_database()
 
