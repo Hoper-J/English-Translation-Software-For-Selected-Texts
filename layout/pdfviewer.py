@@ -1,8 +1,12 @@
+import os
+import sys
+sys.path.append(os.path.abspath('..'))
+
 from PyQt5 import QtCore
 from PyQt5.QtCore import QEvent
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 
-from my_translation.const import CONST
+from const import CONST
 
 
 class PdfViewer(QWebEngineView):
