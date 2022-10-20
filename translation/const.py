@@ -15,13 +15,13 @@ def Const(cls):
 @Const
 class _HistoryFiles(object):
     history_file_number = 10  # 历史文件记录上限
-    initial_file = os.path.abspath("file/readme.pdf")
+    initial_file = os.path.abspath("../file/README.pdf")
 
 
 @Const
 class _PdfViewer(object):
-    # 'file:///Users/home/PycharmProjects/pythonProject1/my_translation/pdfjs/web/new_viewer.html'
-    js_path = "file://" + os.path.abspath("./pdfjs/web/new_viewer.html")
+    # 'file:///Users/home/PycharmProjects/pythonProject1/Translation/pdfjs/web/new_viewer.html'
+    js_path = "file://" + os.path.abspath("../pdfjs/web/new_viewer.html")
 
 
 @Const

@@ -1,18 +1,25 @@
-<!--
- * @Author: your name
- * @Date: 2021-04-07 14:19:52
- * @LastEditTime: 2021-04-21 20:58:58
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /undefined/Users/home/PycharmProjects/pythonProject1/my_translation/readme.md
--->
 # PDF划线翻译（支持扫描版）
-感谢以下两个仓库给我提供的帮助：
-1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路，早点发现我也不会纠结半天了:)
-2. [百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助
+感谢以下三个仓库给我提供的帮助：
+1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路
+2. [百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助（暂时不可用）
+3. [pdf.js](https://github.com/mozilla/pdf.js) 的pdf浏览支持
 
-软件使用的第三方库：execjs, OCRmyPDF, PyPDF2, PyQt5, requests
+软件使用的第三方库：PyExecjs, OCRmyPDF, PyPDF2, PyQt5, PyQtWebEngine, requests
 
+## 搭建虚拟环境以及安装依赖
+```bash
+cd Translation
+# Python Preparation
+virtualenv venv
+source venv/bin/activate
+# Install translation and other dependencies
+pip install -e .
+```
+## 用法
+```bash
+cd translation
+python main.py
+```
 ## 功能
 
 - 划词/句翻译 [√]
@@ -36,5 +43,4 @@
 <img width="1393" alt="image" src="https://user-images.githubusercontent.com/79922894/115140196-97473000-a068-11eb-9bcb-1d8e581b04c7.png">
 - 记录
 <img width="494" alt="image" src="https://user-images.githubusercontent.com/79922894/115140422-d2962e80-a069-11eb-95a6-9ec6819d7ef5.png">
-
 

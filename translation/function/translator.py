@@ -4,6 +4,7 @@ import random
 import time
 from .baidu_translate import Dict
 
+
 class Translator:
     """
     翻译，有疑惑的话请看下源码

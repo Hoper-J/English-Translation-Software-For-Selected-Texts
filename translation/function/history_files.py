@@ -1,16 +1,15 @@
 import os
 import shelve
-import sys
-sys.path.append(os.path.abspath('..'))
 
-from const import CONST
+from translation.const import CONST
 
 
 class HistoryFiles:
     def __init__(self):
-        current_dir = os.path.split(os.path.realpath(__file__))[0]
+        super_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        # current_dir = os.path.split(os.path.realpath(__file__))[0]
         self.file_path = os.path.join(
-            os.path.dirname(current_dir),'file', 'history_data.dat')
+            os.path.dirname(super_dir), 'file', 'history_data.dat')
         self.history_dt = shelve.open(self.file_path)
 
         self.files = []  # 将初始化定义移上来，可以省略finally中的操作

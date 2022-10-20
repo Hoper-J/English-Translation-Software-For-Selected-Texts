@@ -7,11 +7,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
 from const import CONST
-from function.history_files import HistoryFiles
-from function.mutisignal import MutiSignal
-from function.translator import Translator
-from layout.menubar import MenuBar
-from layout.pdfviewer import PdfViewer
+from translation.function.history_files import HistoryFiles
+from translation.function.mutisignal import MutiSignal
+from translation.function.translator import Translator
+from translation.layout.menubar import MenuBar
+from translation.layout.pdfviewer import PdfViewer
 
 
 class MainWindow(QMainWindow):

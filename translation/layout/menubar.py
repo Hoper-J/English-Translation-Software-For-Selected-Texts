@@ -2,8 +2,6 @@ import multiprocessing
 import os
 import shutil
 import threading
-import sys
-sys.path.append(os.path.abspath('..'))
 
 from multiprocessing import Process
 
@@ -11,7 +9,7 @@ import PyPDF2
 import ocrmypdf
 from PyQt5 import QtCore, QtWidgets
 
-from const import CONST
+from translation.const import CONST
 
 class MenuBar():
     def __init__(self, MainWindow):
