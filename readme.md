@@ -1,4 +1,4 @@
-# PDF划线翻译（支持扫描版）
+# pPDF划线翻译（支持扫描版）
 感谢以下两个仓库给我提供的帮助：
 1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路
 2. [百度翻译 API 破解](https://github.com/ZCY01/BaiduTranslate) 提供的翻译帮助（暂时不可用）

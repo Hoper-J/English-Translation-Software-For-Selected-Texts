@@ -61,9 +61,10 @@ class Dict:
         url = 'https://fanyi.baidu.com'
 
         try:
+            # self.sess.get(url, headers=self.headers)
             r = self.sess.get(url, headers=self.headers)
             self.token = re.findall(r"token: '(.*?)',", r.text)[0]
-            self.gtk = re.findall(r"window.gtk = '(.*?)';", r.text)[0]
+            self.gtk = re.findall(r'gtk = "(.*?)";', r.text)[0]
         except Exception as e:
             raise e
 

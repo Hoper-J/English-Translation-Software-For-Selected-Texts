@@ -2,7 +2,7 @@ import hashlib
 import requests
 import random
 import time
-# from .baidu_translate import Dict
+from .baidu_translate import Dict
 
 
 class Translator:

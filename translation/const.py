@@ -21,7 +21,7 @@ class _HistoryFiles(object):
 @Const
 class _PdfViewer(object):
     # 'file:///Users/home/PycharmProjects/pythonProject1/Translation/pdfjs/web/new_viewer.html'
-    js_path = "file://" + os.path.abspath("../pdfjs/web/viewer.html")
+    js_path = "file://" + os.path.abspath("../pdfjs/web/new_viewer.html")
 
 
 @Const
