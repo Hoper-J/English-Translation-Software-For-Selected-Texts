@@ -1,3 +1,12 @@
+> 感谢你的 Star，但需要注意的是，这里是之前的一个练手项目，交互式功能是正常的，但所破解的翻译API均已失效。
+>
+> 目前该代码仓库的作用：
+> 1. 展示划词翻译的运作流程。
+> 2. 提供一个 UI 的界面设计供后续使用学习。
+>
+> 如何解决 API 问题？
+> 答：申请属于你的 API，并根据官方调用的开发文档修改[translation/function/translator.py](https://github.com/Hoper-J/English-Translation-Software-For-Selected-Texts/blob/0cf37b3347d8280994f76114645716705c363984/translation/function/translator.py#L8C7-L8C17)中对应的函数，比如 __youdao_translation()，或者采取 AI 翻译的形式进行替换。
+
 # PDF划线翻译（支持扫描版）
 感谢以下三个仓库给我提供的帮助：
 1. [English-Document-translation-software](https://github.com/zhangcf0110/English-Document-translation-software)提供的鼠标事件捕获思路
